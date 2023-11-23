@@ -30,6 +30,7 @@ class Game(BaseModel):
     player_turn: Player
     game_state: GameState
     game_result: Optional[GameResult]
+    last_en_passant: Optional[str]
     pieces: list[ChessPiece]
 
     class Config:

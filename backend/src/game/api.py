@@ -2,6 +2,7 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from src.config import game_info
 from src.dependencies import get_db
 from src.game import crud, schemas, game_rules
 from src.game.types import GameState
@@ -73,10 +74,14 @@ async def move_game_piece(game_id: int, piece: schemas.ChessPieceMove, db: Sessi
 
 @router.get('/{game_id}/legal_moves', summary='Get the list of all legal moves')
 async def get_all_legal_moves(game_id: int, db: Session = Depends(get_db)):
+    global game_info
     game = crud.get_game(db, game_id)
     if game is None:
         raise HTTPException(
             status_code=404, detail=f'Game with id {game_id} not found')
-    moves = game_rules.get_all_legal_moves(game)
-    print(moves)
+    (moves, spaces_under_attack) = game_rules.get_all_legal_moves(game)
+    game_info[game_id] = {}
+    game_info[game_id]['moves'] = moves
+    game_info[game_id]['attacking_spaces'] = spaces_under_attack
+    print(game_info)
     return 'Got something!'

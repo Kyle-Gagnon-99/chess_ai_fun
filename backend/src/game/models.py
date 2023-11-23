@@ -12,6 +12,7 @@ class Game(Base):
     player_turn = Column(SQLAlchemyEnum(Player))
     game_state = Column(SQLAlchemyEnum(GameState))
     game_result = Column(SQLAlchemyEnum(GameResult), nullable=True)
+    last_en_passant = Column(String, nullable=True)
     pieces = relationship("Piece", back_populates="game")
 
 

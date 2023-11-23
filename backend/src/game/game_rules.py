@@ -37,10 +37,16 @@ def validate_move(piece: schemas.ChessPieceMove, game: schemas.Game):
 
 def get_all_legal_moves(game: schemas.Game):
     legal_moves = {}
+    attacking_spaces = {}
     for p in game.pieces:
         moves = get_list_of_moves(p, game)
         legal_moves[p.string_id] = moves
-    return legal_moves
+
+        if not p.player in attacking_spaces:
+            attacking_spaces[p.player] = moves
+        else:
+            attacking_spaces[p.player] = attacking_spaces[p.player] + moves
+    return (legal_moves, attacking_spaces)
 
 
 def get_list_of_moves(piece: schemas.ChessPieceMove, game: schemas.Game):
@@ -74,6 +80,20 @@ def get_pawn_move_list(piece: schemas.ChessPieceMove, game: schemas.Game):
             double_forward_row = piece.row + 2 * row_direction
             if not any_piece_exists_in_target(row=double_forward_row, col=piece.col, game=game):
                 moves.append((piece.col, double_forward_row))
+
+    # Handle en passant
+    if game.last_en_passant is not None:
+        en_passant_piece = None
+        for p in game.pieces:
+            if p.string_id == game.last_en_passant:
+                en_passant_piece = p
+
+        if en_passant_piece is not None:
+            # Now check to see if the current pawn is in the right row to do an en passant
+            if piece.row == (3 if piece.player == Player.Black else 6):
+                # Then check if the current pawn piece was next to the en passant piece
+                if piece.col == en_passant_piece.col - 1 or piece.col == en_passant_piece.col + 1:
+                    moves.append((piece.row + (1 * row_direction), piece.col))
 
     # Captures
     for capture_col in [piece.col - 1, piece.col + 1]:
