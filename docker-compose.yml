@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+    db:
+        image: postgres:latest
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: chess_ai
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: 91Be97UwFsPZ
+        ports:
+            - '5432:5432'
+
+    pgadmin:
+        image: dpage/pgadmin4
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: root
+        ports:
+            - '8080:80'
+        volumes:
+            - pgadmin-data:/var/lib/pgadmin
+
+    redis:
+        image: redis:latest
+        ports:
+            - '6379:6379'
+
+volumes:
+    postgres_data:
+    pgadmin-data:
