@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Optional, List, Dict
 
 from pydantic import BaseModel
-from src.game.types import Player, GameState, GameResult, PieceType
+from src.game.types import Player, GameState, GameResult, PieceType, MoveResult
 
 
 class ChessPiece(BaseModel):
@@ -35,3 +35,11 @@ class Game(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class LegalMovesReponse(BaseModel):
+    moves: Dict[str, List[List[int]]]
+
+
+class MoveResponse(BaseModel):
+    result: MoveResult

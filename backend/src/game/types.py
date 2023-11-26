@@ -25,3 +25,7 @@ class PieceType(Enum):
     Bishop = "Bishop"
     Knight = "Knight"
     Rook = "Rook"
+
+
+class MoveResult(Enum):
+    MoveIsValid = 'MoveIsValid'

@@ -1,3 +1,4 @@
+import { components } from '@/lib/openapi';
 import React, { ReactNode } from 'react';
 
 function ChessSquare({
@@ -7,31 +8,43 @@ function ChessSquare({
     piece,
     selectPiece,
     movePiece,
-    isSelected,
+    selectedPiece,
+    legalMovesForSelectedPiece,
 }: {
     row: number;
     col: number;
     isLightColor?: boolean;
     piece?: ReactNode;
-    selectPiece: (row: number, col: number) => void;
-    movePiece: (row: number, col: number) => void;
-    isSelected: boolean;
+    selectPiece: (col: number, row: number) => void;
+    movePiece: (col: number, row: number) => void;
+    selectedPiece?: components['schemas']['ChessPiece'] | null;
+    legalMovesForSelectedPiece: number[][] | undefined;
 }) {
     const squareClasses = `w-16 h-16 flex justify-center items-center`;
     const lightClass = `bg-sandcastle-light ${squareClasses}`;
     const darkClass = `bg-sandcastle-dark ${squareClasses}`;
-    const highlightClass = `bg-green-200 ${squareClasses}`;
+    const highlightClass = `bg-green-200 ${squareClasses} border border-green-700`;
+
+    const isLegalMove = legalMovesForSelectedPiece?.some(
+        ([legalCol, legalRow]) => legalRow === row && legalCol === col,
+    );
 
     const handleClick = () => {
         if (piece) {
-            selectPiece(row, col);
+            selectPiece(col, row);
         } else {
-            movePiece(row, col);
+            movePiece(col, row);
         }
     };
 
     let className = isLightColor ? lightClass : darkClass;
-    if (isSelected) {
+    if (
+        selectedPiece &&
+        selectedPiece.row === row &&
+        selectedPiece.col === col
+    ) {
+        className = highlightClass;
+    } else if (isLegalMove) {
         className = highlightClass;
     }
 

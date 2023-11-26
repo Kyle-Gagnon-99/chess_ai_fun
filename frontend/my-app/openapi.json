@@ -1,0 +1,591 @@
+{
+    "openapi": "3.1.0",
+    "info": { "title": "FastAPI", "version": "0.1.0" },
+    "paths": {
+        "/game/games": {
+            "get": {
+                "tags": ["game"],
+                "summary": "Gets all games (completed and active)",
+                "operationId": "get_games_list_game_games_get",
+                "parameters": [
+                    {
+                        "name": "game_state",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "allOf": [
+                                { "$ref": "#/components/schemas/GameState" }
+                            ],
+                            "default": "Active",
+                            "title": "Game State"
+                        }
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "Skip"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Game"
+                                    },
+                                    "title": "Response Get Games List Game Games Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/{game_id}": {
+            "get": {
+                "tags": ["game"],
+                "summary": "Get the game with the given ID",
+                "operationId": "get_game_game__game_id__get",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Game"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["game"],
+                "summary": "Deletes a game by id",
+                "operationId": "delete_game_game__game_id__delete",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": { "application/json": { "schema": {} } }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/create": {
+            "post": {
+                "tags": ["game"],
+                "summary": "Creates a new chess game. All pieces start in starting position",
+                "operationId": "create_new_game_game_create_post",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Game"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/{game_id}/load_game": {
+            "post": {
+                "tags": ["game"],
+                "summary": "Loads the game information into the backend. Typically not needed but can be used",
+                "operationId": "load_game_game__game_id__load_game_post",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": { "application/json": { "schema": {} } }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/{game_id}/unload_game": {
+            "post": {
+                "tags": ["game"],
+                "summary": "Removes any cache data of the current game",
+                "operationId": "unload_game_game__game_id__unload_game_post",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": { "application/json": { "schema": {} } }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/{game_id}/game_state": {
+            "post": {
+                "tags": ["game"],
+                "summary": "Updates the state of the game",
+                "operationId": "update_game_state_game__game_id__game_state_post",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    },
+                    {
+                        "name": "game_state",
+                        "in": "query",
+                        "required": true,
+                        "schema": { "$ref": "#/components/schemas/GameState" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Game"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/{game_id}/turn": {
+            "post": {
+                "tags": ["game"],
+                "summary": "Updates the turn of the game. It also updates the player's turn",
+                "operationId": "update_turn_number_game__game_id__turn_post",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Game"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/{game_id}/move": {
+            "post": {
+                "tags": ["game"],
+                "summary": "Moves a piece from one position to another",
+                "operationId": "move_game_piece_game__game_id__move_post",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChessPieceMove"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": { "application/json": { "schema": {} } }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/{game_id}/legal_moves": {
+            "get": {
+                "tags": ["game"],
+                "summary": "Get the list of all legal moves",
+                "operationId": "get_all_legal_moves_game__game_id__legal_moves_get",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LegalMovesReponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game/{game_id}/pieces": {
+            "get": {
+                "tags": ["pieces"],
+                "summary": "Gets all of the pieces of the game",
+                "operationId": "get_pieces_game__game_id__pieces_get",
+                "parameters": [
+                    {
+                        "name": "game_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer", "title": "Game Id" }
+                    },
+                    {
+                        "name": "player",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                { "$ref": "#/components/schemas/Player" },
+                                { "type": "null" }
+                            ],
+                            "title": "Player"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ChessPiece"
+                                    },
+                                    "title": "Response Get Pieces Game  Game Id  Pieces Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ChessPiece": {
+                "properties": {
+                    "id": { "type": "integer", "title": "Id" },
+                    "string_id": { "type": "string", "title": "String Id" },
+                    "piece_type": { "$ref": "#/components/schemas/PieceType" },
+                    "player": { "$ref": "#/components/schemas/Player" },
+                    "row": { "type": "integer", "title": "Row" },
+                    "col": { "type": "integer", "title": "Col" },
+                    "game_id": { "type": "integer", "title": "Game Id" }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "string_id",
+                    "piece_type",
+                    "player",
+                    "row",
+                    "col",
+                    "game_id"
+                ],
+                "title": "ChessPiece"
+            },
+            "ChessPieceMove": {
+                "properties": {
+                    "id": { "type": "integer", "title": "Id" },
+                    "string_id": { "type": "string", "title": "String Id" },
+                    "piece_type": { "$ref": "#/components/schemas/PieceType" },
+                    "player": { "$ref": "#/components/schemas/Player" },
+                    "row": { "type": "integer", "title": "Row" },
+                    "col": { "type": "integer", "title": "Col" },
+                    "game_id": { "type": "integer", "title": "Game Id" },
+                    "from_row": { "type": "integer", "title": "From Row" },
+                    "from_col": { "type": "integer", "title": "From Col" },
+                    "to_row": { "type": "integer", "title": "To Row" },
+                    "to_col": { "type": "integer", "title": "To Col" }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "string_id",
+                    "piece_type",
+                    "player",
+                    "row",
+                    "col",
+                    "game_id",
+                    "from_row",
+                    "from_col",
+                    "to_row",
+                    "to_col"
+                ],
+                "title": "ChessPieceMove"
+            },
+            "Game": {
+                "properties": {
+                    "id": { "type": "integer", "title": "Id" },
+                    "turn_num": { "type": "integer", "title": "Turn Num" },
+                    "player_turn": { "$ref": "#/components/schemas/Player" },
+                    "game_state": { "$ref": "#/components/schemas/GameState" },
+                    "game_result": {
+                        "anyOf": [
+                            { "$ref": "#/components/schemas/GameResult" },
+                            { "type": "null" }
+                        ]
+                    },
+                    "last_en_passant": {
+                        "anyOf": [{ "type": "string" }, { "type": "null" }],
+                        "title": "Last En Passant"
+                    },
+                    "pieces": {
+                        "items": { "$ref": "#/components/schemas/ChessPiece" },
+                        "type": "array",
+                        "title": "Pieces"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "turn_num",
+                    "player_turn",
+                    "game_state",
+                    "game_result",
+                    "last_en_passant",
+                    "pieces"
+                ],
+                "title": "Game"
+            },
+            "GameResult": {
+                "type": "string",
+                "enum": ["White", "Black", "Draw", "Stalemate"],
+                "title": "GameResult"
+            },
+            "GameState": {
+                "type": "string",
+                "enum": ["Completed", "Active"],
+                "title": "GameState"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "LegalMovesReponse": {
+                "properties": {
+                    "moves": {
+                        "additionalProperties": {
+                            "items": {
+                                "items": { "type": "integer" },
+                                "type": "array"
+                            },
+                            "type": "array"
+                        },
+                        "type": "object",
+                        "title": "Moves"
+                    }
+                },
+                "type": "object",
+                "required": ["moves"],
+                "title": "LegalMovesReponse"
+            },
+            "PieceType": {
+                "type": "string",
+                "enum": ["Pawn", "King", "Queen", "Bishop", "Knight", "Rook"],
+                "title": "PieceType"
+            },
+            "Player": {
+                "type": "string",
+                "enum": ["White", "Black"],
+                "title": "Player"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                { "type": "string" },
+                                { "type": "integer" }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": { "type": "string", "title": "Message" },
+                    "type": { "type": "string", "title": "Error Type" }
+                },
+                "type": "object",
+                "required": ["loc", "msg", "type"],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from src.game import models, util
 from src.game.types import Player, GameState
+from src.game.pieces import crud
 
 
 def create_new_game(db: Session):
@@ -63,4 +64,29 @@ def update_turn_number(db: Session, game_id: int):
 
     db.commit()
     db.refresh(db_game)
+    return db_game
+
+
+def reset_game_state(db: Session, game_id: int):
+    db_game = db.query(models.Game).filter(models.Game.id == game_id).first()
+    if db_game is None:
+        return None
+
+    # Reset the game back to the original values
+    db_game.game_state = GameState.Active
+    db_game.turn_num = 1
+    db_game.player_turn = Player.White
+
+    # Delete all game pieces that are to the game ID
+    crud.delete_game_pieces_by_game_id(db, game_id)
+
+    # Now reset the game pieces
+    pieces = util.initialize_pieces(db_game.id)
+    for piece in pieces:
+        db.add(piece)
+
+    # Save everything
+    db.commit()
+    db.refresh(db_game)
+
     return db_game

@@ -1,4 +1,5 @@
 import ChessBoard from '@/components/chess/ChessBoard';
+import ChessBoardView from '@/components/chess/ChessBoardView';
 
 export default async function Home() {
     return (
@@ -10,8 +11,8 @@ export default async function Home() {
                             Dashboard
                         </h1>
                     </div>
-                    <div className='p-1 flex justify-center mt-20'>
-                        <ChessBoard id='1' />
+                    <div className='p-1 flex justify-center mt-6'>
+                        <ChessBoardView />
                     </div>
                 </div>
             </div>

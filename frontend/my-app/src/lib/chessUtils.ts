@@ -116,32 +116,32 @@ export const startGame: ChessPiece[] = [
 ];
 
 export const fromRowColToLetterNum = (row: number, col: number): string => {
-    let number = String(row + 1);
+    let number = String(row);
     let letter = '';
 
     switch (col) {
-        case 0:
+        case 1:
             letter = 'a';
             break;
-        case 1:
+        case 2:
             letter = 'b';
             break;
-        case 2:
+        case 3:
             letter = 'c';
             break;
-        case 3:
+        case 4:
             letter = 'd';
             break;
-        case 4:
+        case 5:
             letter = 'e';
             break;
-        case 5:
+        case 6:
             letter = 'f';
             break;
-        case 6:
+        case 7:
             letter = 'g';
             break;
-        case 7:
+        case 8:
             letter = 'h';
             break;
         default:

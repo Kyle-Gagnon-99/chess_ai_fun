@@ -1,13 +1,7 @@
 import { ChessPiece } from '@/types/ChessTypes';
 import * as React from 'react';
 import { SVGProps } from 'react';
-const BishopDark = ({
-    props,
-    piece,
-}: {
-    props?: SVGProps<SVGSVGElement>;
-    piece: ChessPiece;
-}) => {
+const BishopDark = ({ props }: { props?: SVGProps<SVGSVGElement> }) => {
     return (
         <div draggable>
             <svg
